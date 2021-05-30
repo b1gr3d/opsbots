@@ -12,6 +12,8 @@ import (
 )
 
 var awarenessChannel = os.Getenv("CLIPPY_AWARE_CHANNEL_ID")
+var pagerdutyUrl = os.GetEnv("PD_URL")
+var ssSlack = os.GetEnv("SS_SLACK_URL")
 
 type IncidentReportBot struct {
 	EventsChannel      chan slackevents.EventsAPIInnerEvent
@@ -93,12 +95,12 @@ func HandleBotIncidentCreations(callback slackapi.InteractionCallback) {
 	initialMessage := ":fire: *Incident Created!* :fire:" + "\n" + "*Priority:*" + " " + selectedPriority +
 		"\n" + "*Regions:*" + " " + selectedRegions + "\n" + "*Services:*" + " " + selectedServices + "\n" +
 		"*Initial Description:*" + " " + incidentDescription + "\n" +
-		"*PagerDuty:*" + " " + "https://subspace.pagerduty.com/incidents/" + pagerdutyId
+		"*PagerDuty:*" + " " + pagerdutyUrl + pagerdutyId
 
 	// create the message being sent to the awarness channel
 	awarenessMessage := "*Incident Created:*" + " " + "#" + channelName + "\n" +
 		"*Created by:*" + " " + userName + "\n" +
-		"*Go To Channel:*" + " " + "https://subspace.slack.com/archives/" + channelId
+		"*Go To Channel:*" + " " + ssSlack + channelId
 
 	// do all the things
 	slack.SetConversationTopic(channelId, pagerdutyId)
